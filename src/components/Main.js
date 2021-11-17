@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { toast } from 'react-toastify';
 import {apiKey, apiUrl} from '../config'
 import Cart from './Cart';
 import CartItem from './CartItem';
@@ -14,10 +15,6 @@ function Main() {
 
   const handleBasket = () => {
     setShowBasket(!isShowBasket)
-  }
-  const removeFromBasket = (itemId) => {
-    const newOrder = order.filter(item => item.id !== itemId)
-    setOrder(newOrder)
   }
   const addToBasket = (item) => {
     const itemIndex = order.findIndex((orderItem) => orderItem.id === item.id)
@@ -40,6 +37,12 @@ function Main() {
       })
       setOrder(newOrder)
     }
+    toast.success('Goods added to basket successfully!')
+  }
+  const removeFromBasket = (itemId) => {
+    const newOrder = order.filter(item => item.id !== itemId)
+    setOrder(newOrder)
+    toast.error('Goods removed to basket successfully!')
   }
 
   const addGoods = (itemId) => {
@@ -58,7 +61,7 @@ function Main() {
   }
     const removeGoods = (itemId) => {
     const newOrder = order.map(el => {
-      if(el.id === itemId){
+      if(el.id === itemId && el.quantity > 0){
         const newQuantity = el.quantity - 1
         return{
           ...el,
